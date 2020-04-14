@@ -1,7 +1,5 @@
-# Flask API for scikit learn
-A simple Flask application that can serve predictions from a scikit-learn model. Reads a pickled sklearn model into memory when the Flask app is started and returns predictions through the /predict endpoint. You can also use the /train endpoint to train/retrain the model. Any sklearn model can be used for prediction.
-
-Read more in [this blog post](https://medium.com/@amirziai/a-flask-api-for-serving-scikit-learn-models-c8bcdaa41daa).
+# Flask API for scikit learn in Docker
+A simple Flask application in a docker image that can serve predictions from a scikit-learn model inside a Docker container. Reads a pickled sklearn model into memory when the Flask app is started and returns predictions through the /predict endpoint. Any sklearn model can be used for prediction.
 
 ### Dependencies
 - scikit-learn
@@ -9,35 +7,23 @@ Read more in [this blog post](https://medium.com/@amirziai/a-flask-api-for-servi
 - pandas
 - numpy
 
+## Build the docker image
+To build the docker image run:
 ```
-pip install -r requirements.txt
+docker build . -t model
 ```
+Or run the file: 'create_image.sh'
 
-### Running API
+### Running the container
+Run the docker container as:
 ```
-python main.py <port>
+docker run -p 8080:8080 model:latest
 ```
+Or run the file: 'docker_run.sh'
 
 # Endpoints
 ### /predict (POST)
-Returns an array of predictions given a JSON object representing independent variables. Here's a sample input:
-```
-[
-    {"Age": 85, "Sex": "male", "Embarked": "S"},
-    {"Age": 24, "Sex": "female", "Embarked": "C"},
-    {"Age": 3, "Sex": "male", "Embarked": "C"},
-    {"Age": 21, "Sex": "male", "Embarked": "S"}
-]
-```
+Returns a dict with the prediction given a JSON object representing independent variables.
 
-and sample output:
-```
-{"prediction": [0, 1, 1, 0]}
-```
-
-
-### /train (GET)
-Trains the model. This is currently hard-coded to be a random forest model that is run on a subset of columns of the titanic dataset.
-
-### /wipe (GET)
-Removes the trained model.
+### /info (GET)
+Return the model info, version and help.
